@@ -18,7 +18,7 @@ In this inherited class, it overrides the `step` function with one additional li
 ```python
 pred_original_sample = self.replace_prediction_with_mask(pred_original_sample, self.mask)
 ```
-Aside from this addition, the rest of the `step`` function remains identical to the original `EulerDiscreteScheduler`` class.
+Aside from this addition, the rest of the `step` function remains identical to the original `EulerDiscreteScheduler` class.
 
 
 ## The Key Function: replace_prediction_with_mask
