@@ -173,25 +173,40 @@ class MotionBrush():
         self, 
         image: np.ndarray, 
         mask: Optional[np.ndarray] = None,
-
+        max_steps_to_replace: Optional[int] = None,
+        num_frames: Optional[int] = None,
+        num_inference_steps: Optional[int] = None,
+        fps: Optional[int] = None,
+        motion_bucket_id: Optional[int] = None,
+        seed: Optional[int] = None,
     ):
         if self.pipe is None:
             self._init_pipe()
 
+        # compute a unique name with hash for image
+        image_name = str(hash(image.tobytes()))
+
+        assert isinstance(self.pipe.scheduler, EulerDiscreteSchedulerMotionBrush)
         self.pipe.scheduler.set_motion_brush_arguments(
-            mask=mask, max_timestep_to_replace=25
+            mask=mask, 
+            max_steps_to_replace=max_steps_to_replace,
         )
 
-        generator = torch.manual_seed(4)
+        if (seed is not None) and (seed >= 0):
+            generator = torch.manual_seed(seed)
+        else:
+            generator = None
+
         with torch.cuda.amp.autocast(dtype=torch.float16):
             frames = self.pipe(
                 Image.fromarray(image),
                 decode_chunk_size=6, 
                 generator=generator, 
-                num_frames=25,
-                motion_bucket_id=100,
-                num_inference_steps=25,
+                num_frames=num_frames,
+                num_inference_steps=num_inference_steps,
+                fps=fps,
+                motion_bucket_id=motion_bucket_id,
             ).frames
         frames_np = [np.array(frame) for frame in frames[0]]
-        make_gif(frames_np, "generated.gif", fps=8, rescale=0.5)
-        return "generated.gif"
+        make_gif(frames_np, f"tmp/{image_name}.gif", fps=fps, rescale=0.5)
+        return f'tmp/{image_name}.gif'
