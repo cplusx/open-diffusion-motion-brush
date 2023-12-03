@@ -8,14 +8,31 @@ from PIL import Image
 from image_utils import make_gif
 
 class EulerDiscreteSchedulerMotionBrush(EulerDiscreteScheduler):
-    def __init__(self, *args, mask=None, **kwargs):
+    def __init__(self, *args, mask=None, max_steps_to_replace=None, **kwargs):
+        '''
+        mask: np.ndarray or torch.Tensor, shape (height, width) or (1xN, height, width), dtype float32, range [0, 1]
+        max_steps_to_replace: int, the maximum number of timesteps to replace with the first frame. This number should be smaller than the number of timesteps in the diffusion chain. If None, all timesteps will be replaced.
+        '''
         super().__init__(*args, **kwargs)
         self.mask = mask
+        self.max_steps_to_replace = max_steps_to_replace
 
-    def replace_prediction_with_mask(self, prediction, mask):
+    def set_motion_brush_arguments(
+        self, 
+        mask=None, 
+        max_steps_to_replace=None
+    ):
+        self.mask = mask
+        self.max_steps_to_replace = max_steps_to_replace
+
+    def replace_prediction_with_mask(
+        self, 
+        prediction, 
+    ):
         '''
         for frames from 2 to end, replace the region where mask == 0 with the prediction of frame 1
         '''
+        mask = self.mask
         if mask is None:
             return prediction
         *_, height, width = prediction.shape
@@ -119,8 +136,9 @@ class EulerDiscreteSchedulerMotionBrush(EulerDiscreteScheduler):
             raise ValueError(
                 f"prediction_type given as {self.config.prediction_type} must be one of `epsilon`, or `v_prediction`"
             )
-
-        pred_original_sample = self.replace_prediction_with_mask(pred_original_sample, self.mask)
+        
+        if self.max_steps_to_replace is not None and self.step_index < self.max_steps_to_replace:
+            pred_original_sample = self.replace_prediction_with_mask(pred_original_sample)
 
         # 2. Convert to an ODE derivative
         derivative = (sample - pred_original_sample) / sigma_hat
@@ -151,11 +169,18 @@ class MotionBrush():
             pipe.enable_model_cpu_offload()
             self.pipe = pipe
 
-    def __call__(self, image, mask):
+    def __call__(
+        self, 
+        image: np.ndarray, 
+        mask: Optional[np.ndarray] = None,
+
+    ):
         if self.pipe is None:
             self._init_pipe()
 
-        self.pipe.scheduler.mask = mask
+        self.pipe.scheduler.set_motion_brush_arguments(
+            mask=mask, max_timestep_to_replace=25
+        )
 
         generator = torch.manual_seed(4)
         with torch.cuda.amp.autocast(dtype=torch.float16):
