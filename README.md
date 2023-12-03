@@ -1,5 +1,16 @@
 # open-diffusion-motion-brush
-An Open Implementation of Motion Brush like Gen-2
+This Is An Open Implementation of Motion Brush like Gen-2
+Motion Brush allows you to specify the region of image to have motion.
+This implementation is based on 
+* [diffusers](https://github.com/huggingface/diffusers)
+* [Stable Video Diffusion](https://huggingface.co/docs/diffusers/main/using-diffusers/svd) by Stabilityai
+
+## Introduction
+Steps to have your image to be moving/animated:
+1. Upload your image
+2. Use the sketch brush to specify the region to have motion
+3. [Optinoal] Adjust the parameters, the motion bucket ID will affect the motion strength (the larger the stronger)
+4. Click "Generate" to see the result
 
 Work in progress...🚧
 
