@@ -1,5 +1,6 @@
 import gradio as gr
 import numpy as np
+from PIL import Image
 from motion_brush_utils import MotionBrush
 
 motion_brush = MotionBrush()
@@ -41,8 +42,15 @@ def animate_image(
 
 with gr.Blocks() as demo:
     with gr.Row():
-        input_image = gr.ImageEditor(height=512)
-        output_image = gr.Image(height=512)
+        with gr.Column():
+            gr.Markdown("## Input")
+            input_image = gr.ImageEditor(height=512)
+        with gr.Column():
+            gr.Markdown("## Output")
+            output_image = gr.Image(height=512)
+
+    with gr.Row():
+        gr.Markdown("## Parameters")
 
     with gr.Row():
         with gr.Column():
@@ -55,12 +63,18 @@ with gr.Blocks() as demo:
 
     submit_btn = gr.Button(value="Generate")
     
-    gr.Examples(
-        [
-            ['figures/test_image_cloud_resized.jpg']
-        ],
-        inputs=[input_image],
-    )
+    # Now gr.Examples has a bug, when you submit the task, the image will be reset and the mask will disappear
+    # dummy_image_to_show = gr.Image(height=512, visible=False)
+    # gr.Examples(
+    #     examples=[
+    #         [{
+    #             'background': 'figures/test_image_cloud_resized.jpg',
+    #             'layers': [np.zeros_like(np.array(Image.open('figures/test_image_cloud_resized.jpg').convert('RGBA')))],
+    #             'composite': np.zeros_like(np.array(Image.open('figures/test_image_cloud_resized.jpg').convert('RGBA'))),
+    #         }, 'figures/test_image_cloud_resized.jpg']
+    #     ],
+    #     inputs=[input_image, dummy_image_to_show],
+    # )
 
     submit_btn.click(
         animate_image, 

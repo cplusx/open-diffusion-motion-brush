@@ -15,4 +15,4 @@ pip install -r requirements.txt
 
 Functions TODO list
 - [] Mask dilation
-- [] Set number of time steps to do replacement
+- [x] Set number of time steps to do replacement
