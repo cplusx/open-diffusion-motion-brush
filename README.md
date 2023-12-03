@@ -12,6 +12,16 @@ git clone https://github.com/cplusx/open-diffusion-motion-brush.git
 pip install -r requirements.txt
 ```
 
+## How to use
+Start the demo by running:
+```bash
+python gradio_demo.py
+```
+
+The following GIF shows how to use the motion brush to specify the region to have motion. 
+
+(Note, the GIF removes the processing frames, it takes ~2 mins on a V100 for 25x576x1024 video.)
+![figures/motion_brush_demo.gif](figures/motion_brush_demo.gif)
 
 Functions TODO list
 - [] Mask dilation
