@@ -1,3 +1,4 @@
 diffusers
 gradio
 opencv-python
+accelerate
