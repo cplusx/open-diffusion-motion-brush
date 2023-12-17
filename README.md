@@ -5,6 +5,9 @@ This implementation is based on
 * [diffusers](https://github.com/huggingface/diffusers)
 * [Stable Video Diffusion](https://huggingface.co/docs/diffusers/main/using-diffusers/svd) by Stabilityai
 
+🔥🚀 Try it in Google Colab
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/cplusx/4fbe79162880cd007cdca39389b3c4a4/open_motion_brush.ipynb)
+
 ## Introduction
 Steps to have your image to be moving/animated:
 1. Upload your image
