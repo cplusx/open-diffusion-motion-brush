@@ -6,7 +6,10 @@ This implementation is based on
 * [Stable Video Diffusion](https://huggingface.co/docs/diffusers/main/using-diffusers/svd) by Stabilityai
 
 🔥🚀 Try it in Google Colab
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/cplusx/4fbe79162880cd007cdca39389b3c4a4/open_motion_brush.ipynb)
+
+Please use GPU to run the demo, and for a T4 GPU, it might takes 5 mins to process a 25x256x512 video.
 
 ## Introduction
 Steps to have your image to be moving/animated:
