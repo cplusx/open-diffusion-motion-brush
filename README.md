@@ -36,4 +36,6 @@ The following GIF shows how to use the motion brush to specify the region to hav
 
 Functions TODO list
 - [] Mask dilation
+- [] Google Colab Demo
+- [x] Handle image resizing if the input image is too large or does not satisfy the requirement
 - [x] Set number of time steps to do replacement

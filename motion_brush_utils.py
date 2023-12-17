@@ -178,6 +178,7 @@ class MotionBrush():
         num_inference_steps: Optional[int] = None,
         fps: Optional[int] = None,
         motion_bucket_id: Optional[int] = None,
+        noise_aug_strength: Optional[float] = None,
         seed: Optional[int] = None,
     ):
         if self.pipe is None:
@@ -200,12 +201,13 @@ class MotionBrush():
         with torch.cuda.amp.autocast(dtype=torch.float16):
             frames = self.pipe(
                 Image.fromarray(image),
-                decode_chunk_size=6, 
+                decode_chunk_size=5, 
                 generator=generator, 
                 num_frames=num_frames,
                 num_inference_steps=num_inference_steps,
                 fps=fps,
                 motion_bucket_id=motion_bucket_id,
+                noise_aug_strength=noise_aug_strength,
             ).frames
         frames_np = [np.array(frame) for frame in frames[0]]
         make_gif(frames_np, f"tmp/{image_name}.gif", fps=fps, rescale=0.5)
